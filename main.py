@@ -54,3 +54,27 @@ class Book:
 
     def __str__(self):
         return f"Book ID: {self.book_id}, Title: {self.title}, Author: {self.author}, ISBN: {self.ISBN}, Availability: {self.availability}"
+
+
+
+class Library:
+    def __init__(self):
+        self.book_inventory = []
+        self.users = []
+
+    def add_book(self, book):
+        self.book_inventory.append(book)
+
+    def remove_book(self, book):
+        self.book_inventory.remove(book)
+
+    def register_user(self, user):
+        self.users.append(user)
+
+    def unregister_user(self, user):
+        self.users.remove(user)
+
+    def __str__(self):
+        book_list = [str(book) for book in self.book_inventory]
+        user_list = [str(user) for user in self.users]
+        return f"State of library: \nBooks:\n{'\n'.join(book_list)}\nUsers:\n{'\n'.join(user_list)}"
