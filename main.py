@@ -135,9 +135,6 @@ class LibraryGUI:
         self.label_email.grid(row=3, column=0, sticky=tk.E)
         self.entry_email.grid(row=3, column=1)
 
-        self.label_books_borrowed.grid(row=4, column=0, sticky=tk.E)
-        self.entry_books_borrowed.grid(row=4, column=1)
-
         self.label_book_id.grid(row=0, column=2, sticky=tk.E)
         self.entry_book_id.grid(row=0, column=3)
 
@@ -150,8 +147,6 @@ class LibraryGUI:
         self.label_ISBN.grid(row=3, column=2, sticky=tk.E)
         self.entry_ISBN.grid(row=3, column=3)
 
-        self.label_availability.grid(row=4, column=2, sticky=tk.E)
-        self.entry_availability.grid(row=4, column=3)
 
         # create buttons
         self.button_borrow.grid(row=5, column=0, columnspan=1)
@@ -184,15 +179,15 @@ class LibraryGUI:
         if user is not None and book is not None:
             if book.availability:
                 if book in user.books_borrowed:
-                    messagebox.showerror("Error", f"User ID {user.user_id} has already borrowed {book.title}")
+                    messagebox.showerror("Error", f"User ID {user.user_id} has already borrowed {book.title} by {book.author}")
                 else:
                     user.borrow_book(book)
-                    messagebox.showinfo("Borrow Book", f"Book {book.title} has been borrowed by user ID {user.user_id}")
+                    messagebox.showinfo("Borrow Book", f"{user.first_name} has succefully borrowed {book.title} by {book.author}")
                     #Clear the entry fields
                     self.entry_user_id.delete(0, 'end')
                     self.entry_book_id.delete(0, 'end')
             else:
-                messagebox.showerror("Error", f"Book {book.title} is not available for borrowing")
+                messagebox.showerror("Error", f"{book.title} by {book.author} is not available for borrowing")
         else:
             messagebox.showerror("Error", "User ID or book ID not found")
 
@@ -206,12 +201,56 @@ class LibraryGUI:
         if user is not None and book is not None:
             if book in user.books_borrowed:
                 user.return_book(book)
-                messagebox.showinfo("Return Book", f"Book {book.title} returned by user ID: {user.user_id}")
+                messagebox.showinfo("Return Book", f" {book.title} by {book.author} returned by {user.first_name} user ID: {user.user_id}")
             else:
-                messagebox.showerror("Error",f"User ID {user.user_id} has not borrowed {book.title} therefore cannot return it")
+                messagebox.showerror("Error",f"{user.first_name} User ID {user.user_id} has not borrowed {book.title} therefore cannot return it")
 
                 #Clear entry fields
                 self.entry_user_id.delete(0, 'end')
                 self.entry_book_id.delete(0, 'end')
         else:
             messagebox.showerror("Error", "User ID or Book ID not found")
+
+
+#Creating User class instance
+user1 = User("77282", "Yale","Nalanze", "yalenalanze@gmail.com")
+user2 = User("77255", "Mopao", "silikoti", "silikoti@gmail.com")
+user3 = User("76754", "Kiki", "Mokonzi", "mokonzi@gmail.com")
+user4 = User("77256", "Jeje", "Mukeba", "mukeba@gmail.com")
+
+#creating instance for Book class
+book1 = Book("100", "Python Essentials", "Python software foundation", "978-0-316-76948-0", True)
+book2 = Book("101", "Hello Earth", "Marsians", "978-0-316-76948-0", True)
+book3 = Book("102", "Karibu Kenya", "Mkenya Halisi", "978-0-316-76948-0", True)
+book4 = Book("103", "Stop air polution", "Concerned Humans", "978-0-316-76948-0", True)
+book5 = Book("104", "Data Science Fundamentals", "Data Science Community", "978-1-234-56789-0", True)
+book6 = Book("105", "Introduction to Machine Learning", "ML Experts", "978-2-345-67890-1", True)
+book7 = Book("106", "History of the Universe", "Cosmic Researchers", "978-3-456-78901-2", True)
+book8 = Book("107", "Artificial Intelligence Explained", "AI Wizards", "978-4-567-89012-3", True)
+
+library = Library()
+
+#register users and add books to library
+library.register_user(user1)
+library.register_user(user2)
+library.register_user(user3)
+library.register_user(user4)
+
+library.add_book(book1)
+library.add_book(book2)
+library.add_book(book3)
+library.add_book(book4)
+library.add_book(book5)
+library.add_book(book6)
+library.add_book(book7)
+library.add_book(book8)
+
+
+# Creating the Tkinter window
+root = tk.Tk()
+
+# Creating the LibraryGUI instance
+library_gui = LibraryGUI(root, library)
+
+# Running the Tkinter event loop
+root.mainloop()
