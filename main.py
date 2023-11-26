@@ -121,6 +121,8 @@ class LibraryGUI:
         #create buttons
         self.button_borrow = tk.Button(master, text="Borrow book", command=self.borrow_book)
         self.button_return =  tk.Button(master, text="Return borrowed book", command=self.return_book)
+        self.button_display_borrowed_books = tk.Button(master, text="Borrowed Books", command=self.display_borrowed_books)
+        self.button_display_available_books = tk.Button(master, text="Available Books", command=self.display_available_books)
 
         # arrange labels and entry widgets in a grid layout
         self.label_user_id.grid(row=0, column=0, sticky=tk.E)
@@ -151,6 +153,8 @@ class LibraryGUI:
         # create buttons
         self.button_borrow.grid(row=5, column=0, columnspan=1)
         self.button_return.grid(row=5, column=2, columnspan=1)
+        self.button_display_borrowed_books.grid(row=6, column=0, columnspan=1)
+        self.button_display_available_books.grid(row=6, column=2, columnspan=1)
 
     #Define methods to identify book and users by their ids
     def find_user_by_id(self, user_id):
@@ -166,7 +170,7 @@ class LibraryGUI:
         return None
 
 
-
+    #Define methods to borrow or return a book
     def borrow_book(self):
         #get values from entry widgets
         user_id = self.entry_user_id.get()
@@ -191,6 +195,7 @@ class LibraryGUI:
         else:
             messagebox.showerror("Error", "User ID or book ID not found")
 
+
     def return_book(self):
         user_id = self.entry_user_id.get()
         book_id = self.entry_book_id.get()
@@ -203,13 +208,35 @@ class LibraryGUI:
                 user.return_book(book)
                 messagebox.showinfo("Return Book", f" {book.title} by {book.author} returned by {user.first_name} user ID: {user.user_id}")
             else:
-                messagebox.showerror("Error",f"{user.first_name} User ID {user.user_id} has not borrowed {book.title} therefore cannot return it")
+                messagebox.showerror("Error",f"{user.first_name}, User ID {user.user_id}, has not borrowed {book.title} therefore cannot return it")
 
                 #Clear entry fields
                 self.entry_user_id.delete(0, 'end')
                 self.entry_book_id.delete(0, 'end')
         else:
             messagebox.showerror("Error", "User ID or Book ID not found")
+
+
+    #Method for displaying borrowed books
+    def display_borrowed_books(self):
+        user_id = self.entry_user_id.get()
+        user = self.find_user_by_id(user_id)
+
+        if user is not None:
+            borrowed_books = [book.title for book in user.books_borrowed]
+            if borrowed_books:
+                messagebox.showinfo("Your Borrowed Books", f"{user.first_name} {user.last_name}'s Borrowed Books:\n{' '.join(borrowed_books)}")
+            else:
+                messagebox.showinfo("Borrowed Books", f"{user.first_name} {user.last_name} has not borrowed any book. ")
+        else:
+            messagebox.showerror("Error", f"User ID is not valid")
+
+
+    #Method for displaying available books
+    def display_available_books(self):
+        available_books = [book.title for book in self.library.book_inventory if book.availability]
+        messagebox.showinfo("Available Books", f"Available books in the libray: \n{', '.join(available_books)}")
+
 
 
 #Creating User class instance
